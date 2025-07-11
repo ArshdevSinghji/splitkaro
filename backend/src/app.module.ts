@@ -1,10 +1,22 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { UserModule } from './user/user.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { dataSourceOptions } from './data-source';
+import { HashModule } from './hash/hash.module';
+import { AuthModule } from './auth/auth.module';
+import { GroupModule } from './group/group.module';
+import { GroupDetailModule } from './group-detail/group-detail.module';
+import { ExpenseModule } from './expense/expense.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    TypeOrmModule.forRoot(dataSourceOptions),
+    UserModule,
+    HashModule,
+    AuthModule,
+    GroupModule,
+    GroupDetailModule,
+    ExpenseModule,
+  ],
 })
 export class AppModule {}
