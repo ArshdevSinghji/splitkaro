@@ -26,3 +26,12 @@ export const SignUpSchema = z
   });
 
 export type ZSignUpSchema = z.infer<typeof SignUpSchema>;
+
+export const CreateGroupSchema = z.object({
+  groupName: z
+    .string()
+    .nonempty("group name is required!")
+    .min(3, "group name must be at least of 3 characters"),
+});
+
+export type ZCreateGroupSchema = z.infer<typeof CreateGroupSchema>;

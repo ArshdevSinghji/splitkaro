@@ -46,7 +46,18 @@ const initialState: IAuthUser = {
 const authenticateUserSlice = createSlice({
   name: "authentication",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.user.username = "";
+      state.user.email = "";
+      state.isAuthenticated = false;
+      state.error = null;
+      state.isLoading = false;
+
+      document.cookie =
+        "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(authenticatingUser.fulfilled, (state, action) => {
@@ -68,4 +79,5 @@ const authenticateUserSlice = createSlice({
   },
 });
 
+export const { logout } = authenticateUserSlice.actions;
 export default authenticateUserSlice.reducer;

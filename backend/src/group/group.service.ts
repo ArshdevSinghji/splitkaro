@@ -19,6 +19,12 @@ export class GroupService {
     });
   }
 
+  async findAll(email: string) {
+    return await this.groupRepo.find({
+      where: { owner: { email } },
+    });
+  }
+
   async create(email: string, createGroupDto: CreateGroupDto) {
     const owner = await this.userService.findOne(email);
     if (!owner) {

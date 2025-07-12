@@ -1,6 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userRegisterReducer from "./slice/registeringUser.slice";
 import userAuthenticationReducer from "./slice/authenticatingUser.slice";
+import createGroupReducer from "./slice/thunk";
+import fetchGroupsReducers from "./slice/fetchGroups";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -8,12 +10,14 @@ const persistConfig = {
   key: "root",
   storage,
   whitelist: ["authentication"],
-  blacklist: ["register"],
+  blacklist: ["register", "creatingGroup", "fetchGroups"],
 };
 
 const rootReducer = combineReducers({
   register: userRegisterReducer,
   authentication: userAuthenticationReducer,
+  creatingGroup: createGroupReducer,
+  fecthGroups: fetchGroupsReducers,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
