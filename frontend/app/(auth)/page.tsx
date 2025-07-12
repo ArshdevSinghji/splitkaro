@@ -2,6 +2,7 @@
 
 import {
   Button,
+  CircularProgress,
   Divider,
   Paper,
   Stack,
@@ -12,10 +13,22 @@ import { useForm } from "react-hook-form";
 import { SignInSchema, ZSignInSchema } from "../utils/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { style } from "../style/style";
-import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { authenticatingUser } from "../redux/slice/authenticatingUser.slice";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import GoogleIcon from "@mui/icons-material/Google";
+import Link from "next/link";
 
 const SignIn = () => {
+  const router = useRouter();
+
+  const dispatch = useAppDispatch();
+  const { isLoading, error, isAuthenticated } = useAppSelector(
+    (state) => state.authentication
+  );
+
   const {
     register,
     handleSubmit,
@@ -24,9 +37,27 @@ const SignIn = () => {
     resolver: zodResolver(SignInSchema),
   });
 
-  const onSubmit = () => {
-    return "Working!";
+  const onSubmit = (data: ZSignInSchema) => {
+    dispatch(
+      authenticatingUser({
+        email: data.email,
+        password: data.password,
+      })
+    );
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast("SignIn Successful!");
+      router.push("/home");
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(`Error signing you in!`);
+    }
+  }, [error]);
 
   return (
     <Paper
@@ -42,7 +73,7 @@ const SignIn = () => {
     >
       <Stack
         component={"form"}
-        onSubmit={handleSubmit(() => onSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
         alignItems={"center"}
         gap={2}
         noValidate
@@ -72,13 +103,13 @@ const SignIn = () => {
         />
 
         <Button
-          disabled={isSubmitting}
+          disabled={isLoading || isSubmitting}
           type="submit"
           variant="outlined"
           size="small"
           fullWidth
         >
-          sign in
+          {isLoading ? <CircularProgress /> : "Sign in"}
         </Button>
 
         <Divider sx={style}>OR</Divider>

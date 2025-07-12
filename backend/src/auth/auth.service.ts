@@ -26,7 +26,7 @@ export class AuthService {
     const payload = { email: user.email, username: user.username };
 
     return {
-      message: 'sign in successful!',
+      user,
       access_token: await this.jwtService.signAsync(payload),
     };
   }

@@ -2,6 +2,7 @@
 
 import {
   Button,
+  CircularProgress,
   Divider,
   Paper,
   Stack,
@@ -12,10 +13,23 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpSchema, ZSignUpSchema } from "@/app/utils/zod";
 import { style } from "@/app/style/style";
+import { useRouter } from "next/navigation";
 import GoogleIcon from "@mui/icons-material/Google";
 import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "@/app/redux/hooks";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { authenticatingUser } from "@/app/redux/slice/authenticatingUser.slice";
+import { registerUser } from "@/app/redux/slice/registeringUser.slice";
 
-export default function SignIn() {
+export default function SignUp() {
+  const router = useRouter();
+
+  const dispatch = useAppDispatch();
+  const { error, isLoading, isRegistered } = useAppSelector(
+    (state) => state.register
+  );
+
   const {
     register,
     formState: { errors, isSubmitting },
@@ -24,9 +38,28 @@ export default function SignIn() {
     resolver: zodResolver(SignUpSchema),
   });
 
-  const onSubmit = () => {
-    return "working!";
+  const onSubmit = (data: ZSignUpSchema) => {
+    dispatch(
+      registerUser({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      })
+    );
   };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(`Error signing you in!`);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (isRegistered) {
+      toast("user registered successfully!");
+      router.push("/");
+    }
+  }, [isRegistered]);
 
   return (
     <Paper
@@ -87,7 +120,7 @@ export default function SignIn() {
           {...register("confirmPassword")}
           name="confirmPassword"
           label="confirmPassword"
-          type="confirmPassword"
+          type="password"
           size="small"
           error={!!errors.confirmPassword}
           helperText={errors?.confirmPassword?.message}
@@ -100,7 +133,7 @@ export default function SignIn() {
           size="small"
           fullWidth
         >
-          sign up
+          {isLoading ? <CircularProgress /> : "Sign up"}
         </Button>
 
         <Divider sx={style}>OR</Divider>
