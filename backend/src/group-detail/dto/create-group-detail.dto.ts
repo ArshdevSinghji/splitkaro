@@ -5,7 +5,6 @@ import {
   IsNotEmpty,
   IsString,
 } from 'class-validator';
-import { Category } from 'src/enum/category.enum';
 
 export class CreateGroupDetailDto {
   @IsArray()
@@ -15,7 +14,4 @@ export class CreateGroupDetailDto {
   @IsString()
   @IsNotEmpty()
   summary: string;
-
-  @IsEnum(Category)
-  category: Category;
 }

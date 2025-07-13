@@ -102,7 +102,13 @@ const Profile = () => {
                 },
               }}
             >
-              <Avatar variant="square" sx={{ width: 196, height: 196 }} />
+              <Avatar
+                variant="square"
+                sx={{
+                  width: 196,
+                  height: 196,
+                }}
+              />
             </Badge>
           </Box>
 

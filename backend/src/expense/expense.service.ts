@@ -1,26 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Expense } from './entities/expense.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateExpenseDto } from './dto/create-expense.dto';
-import { UpdateExpenseDto } from './dto/update-expense.dto';
+import { UserService } from 'src/user/user.service';
+import { GroupService } from 'src/group/group.service';
+import { SettlementService } from 'src/settlement/settlement.service';
 
 @Injectable()
 export class ExpenseService {
-  create(createExpenseDto: CreateExpenseDto) {
-    return 'This action adds a new expense';
+  constructor(
+    @InjectRepository(Expense)
+    private readonly expenseRepository: Repository<Expense>,
+    private readonly groupService: GroupService,
+    private readonly userService: UserService,
+    private readonly settlementService: SettlementService,
+  ) {}
+
+  async findOne(expenseId: number) {
+    return await this.expenseRepository.findOne({ where: { id: expenseId } });
   }
 
-  findAll() {
-    return `This action returns all expense`;
-  }
+  async creatingExpenseWWithSettlement(
+    groupName: string,
+    createExpenseDto: CreateExpenseDto,
+  ) {
+    const group = await this.groupService.findOne(groupName);
+    if (!group) {
+      throw new BadRequestException(`Group with name ${groupName} not found`);
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} expense`;
-  }
+    const expense = this.expenseRepository.create({
+      ...createExpenseDto,
+      group,
+    });
 
-  update(id: number, updateExpenseDto: UpdateExpenseDto) {
-    return `This action updates a #${id} expense`;
-  }
+    const savedExpense = await this.expenseRepository.save(expense);
 
-  remove(id: number) {
-    return `This action removes a #${id} expense`;
+    createExpenseDto.members.map(async (member) => {
+      const user = await this.userService.findOne(member);
+      if (!user) {
+        throw new BadRequestException(`User with email ${member} not found`);
+      }
+      await this.settlementService.create(user, savedExpense, {
+        member,
+        amountToPay: 50,
+        isPaid: createExpenseDto.paidBy === member,
+      });
+    });
+
+    return savedExpense;
   }
 }

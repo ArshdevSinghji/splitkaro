@@ -15,10 +15,12 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import GroupsIcon from "@mui/icons-material/Groups";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CreateGroupModal from "../component/CreateGroupModal";
 import { useEffect, useState } from "react";
-import CreateGroup from "../component/CreateGroup";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchGroups } from "../redux/slice/fetchGroups";
+import AddExpenseModal from "../component/AddExpenseModal";
 
 const Home = () => {
   const { user } = useAppSelector((state) => state.authentication);
@@ -30,6 +32,7 @@ const Home = () => {
   }, [dispatch, user.email]);
 
   const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
 
   const handleCreateGroupClick = () => {
     setShowCreateGroup(true);
@@ -82,6 +85,13 @@ const Home = () => {
                     <GroupsIcon />
                   </ListItemIcon>
                   <ListItemText primary={group.groupName} />
+                  <ListItemIcon>
+                    <AddCircleIcon
+                      onClick={() =>
+                        setShowAddExpenseModal(!showAddExpenseModal)
+                      }
+                    />
+                  </ListItemIcon>
                 </ListItemButton>
               </ListItem>
             ))}
@@ -99,7 +109,7 @@ const Home = () => {
           backgroundColor: "white",
         }}
       >
-        {!showCreateGroup ? (
+        {!showCreateGroup && !showAddExpenseModal ? (
           <Box>
             <Typography variant="h4" gutterBottom>
               These are your groups.
@@ -107,7 +117,11 @@ const Home = () => {
           </Box>
         ) : (
           <Box>
-            <CreateGroup handleClose={handleCloseCreateGroup} />
+            {showAddExpenseModal ? (
+              <AddExpenseModal />
+            ) : (
+              <CreateGroupModal handleClose={handleCloseCreateGroup} />
+            )}
           </Box>
         )}
       </Container>

@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { GroupDetail } from '../../group-detail/entity/groupDetail.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Expense } from 'src/expense/entities/expense.entity';
@@ -7,6 +7,9 @@ import { Expense } from 'src/expense/entities/expense.entity';
 export class Group {
   @PrimaryColumn({ unique: true })
   groupName: string;
+
+  @Column({ nullable: true })
+  groupMember: string;
 
   @ManyToOne(() => User, (user) => user.groups)
   owner: User;

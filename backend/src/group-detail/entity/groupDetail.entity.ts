@@ -1,5 +1,11 @@
 import { Category } from 'src/enum/category.enum';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Group } from '../../group/entities/group.entity';
 
 @Entity()
@@ -8,13 +14,10 @@ export class GroupDetail {
   id: number;
 
   @Column('simple-array')
-  userEmails: string[];
+  members: string[];
 
-  @Column()
+  @Column({ nullable: true })
   summary: string;
-
-  @Column({ type: 'enum', enum: Category })
-  category: Category;
 
   @ManyToOne(() => Group, (group) => group.groupDetail)
   group: Group;

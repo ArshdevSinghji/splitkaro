@@ -1,8 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userRegisterReducer from "./slice/registeringUser.slice";
 import userAuthenticationReducer from "./slice/authenticatingUser.slice";
-import createGroupReducer from "./slice/thunk";
+import createGroupReducer from "./slice/createGroup";
 import fetchGroupsReducers from "./slice/fetchGroups";
+import fecthUserByUsernameReducer from "./slice/GetUserByUsername.slice";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   authentication: userAuthenticationReducer,
   creatingGroup: createGroupReducer,
   fecthGroups: fetchGroupsReducers,
+  fetchingUser: fecthUserByUsernameReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

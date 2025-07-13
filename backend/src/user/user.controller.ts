@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { queryObjects } from 'v8';
 
 @Controller('user')
 export class UserController {
@@ -21,8 +23,8 @@ export class UserController {
   }
 
   @Get()
-  async findAll() {
-    return await this.userService.findAll();
+  async findByUsernameOrFindAll(@Query() query: { username?: string }) {
+    return await this.userService.findByUsernameOrFindAll(query.username);
   }
 
   @Get(':email')

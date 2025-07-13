@@ -1,12 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
 import { Group } from '../../group/entities/group.entity';
 import { Expense } from 'src/expense/entities/expense.entity';
+import { Settlement } from 'src/settlement/entity/settlement.entity';
 
 @Entity()
 export class User {
   @PrimaryColumn({ unique: true })
   email: string;
 
+  @Index()
   @Column()
   username: string;
 
@@ -19,6 +21,6 @@ export class User {
   @OneToMany(() => Group, (group) => group.owner)
   groups: Group[];
 
-  @OneToMany(() => Expense, (expense) => expense.user)
-  expense: Expense[];
+  @OneToMany(() => Settlement, (settlement) => settlement.user)
+  settlements: Settlement[];
 }

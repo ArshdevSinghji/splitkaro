@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { email } from "zod";
 
 export const SignInSchema = z.object({
   email: z.email(),
@@ -35,3 +35,20 @@ export const CreateGroupSchema = z.object({
 });
 
 export type ZCreateGroupSchema = z.infer<typeof CreateGroupSchema>;
+
+export const CreateFriendSchema = z.object({
+  username: z.string().nonempty("username is required!"),
+  email: z.email("Invalid email format").optional(),
+});
+
+export type ZCreateFriendSchema = z.infer<typeof CreateFriendSchema>;
+
+export const AddExpenseSchema = z.object({
+  description: z.string().nonempty("description is required!"),
+  category: z.string().nonempty("category is required!"),
+  price: z.string().nonempty("price is required!"),
+  // .positive("price must be a positive number!")
+  // .min(1, "price must be at least ₹1"),
+});
+
+export type ZAddExpenseSchema = z.infer<typeof AddExpenseSchema>;

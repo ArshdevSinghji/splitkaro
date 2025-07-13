@@ -15,7 +15,7 @@ export class GroupDetailService {
   ) {}
 
   async create(groupName: string, createGroupDetailDto: CreateGroupDetailDto) {
-    const { userEmails } = createGroupDetailDto;
+    // const { userEmails } = createGroupDetailDto;
 
     const group = await this.groupService.findOne(groupName);
     if (!group) throw new BadRequestException('group not found!');

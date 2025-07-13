@@ -27,10 +27,20 @@ export class UserService {
     return await this.userRepository.find();
   }
 
+  async findByUsernameOrFindAll(username?: string) {
+    if (!username) {
+      return await this.findAll();
+    }
+
+    return await this.userRepository.find({
+      where: { username },
+    });
+  }
+
   async findOne(email: string) {
-    return this.userRepository.findOne({
+    return await this.userRepository.findOne({
       where: { email },
-      relations: ['groups', 'groups.groupDetail', 'expense'],
+      relations: ['groups', 'groups.groupDetail'],
     });
   }
 

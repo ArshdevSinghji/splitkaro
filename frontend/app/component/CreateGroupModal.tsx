@@ -14,10 +14,10 @@ import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { CreateGroupSchema, ZCreateGroupSchema } from "../utils/zod";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
-import { createGroup } from "../redux/slice/thunk";
+import { createGroup } from "../redux/slice/createGroup";
 import { toast } from "sonner";
 
-const CreateGroup: React.FC<{ handleClose: () => void }> = ({
+const CreateGroupModal: React.FC<{ handleClose: () => void }> = ({
   handleClose,
 }) => {
   const { isLoading } = useAppSelector((state) => state.creatingGroup);
@@ -52,7 +52,7 @@ const CreateGroup: React.FC<{ handleClose: () => void }> = ({
   return (
     <Container>
       <Paper
-        elevation={3}
+        variant="outlined"
         sx={{
           position: "absolute",
           top: "50%",
@@ -107,4 +107,4 @@ const CreateGroup: React.FC<{ handleClose: () => void }> = ({
   );
 };
 
-export default CreateGroup;
+export default CreateGroupModal;
