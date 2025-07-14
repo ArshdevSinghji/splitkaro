@@ -3,20 +3,21 @@ import {
   IsBoolean,
   IsEnum,
   IsInt,
+  IsObject,
   IsPositive,
   IsString,
 } from 'class-validator';
 import { Category } from 'src/enum/category.enum';
 
 export class CreateExpenseDto {
-  @IsString()
   @IsArray()
+  @IsString({ each: true })
   members: string[];
 
   @IsString()
   description: string;
 
-  @IsEnum({ enum: Category })
+  @IsEnum(Category)
   category: Category;
 
   @IsInt()
@@ -25,4 +26,7 @@ export class CreateExpenseDto {
 
   @IsString()
   paidBy: string;
+
+  @IsObject()
+  amountToPay: { [key: string]: number };
 }

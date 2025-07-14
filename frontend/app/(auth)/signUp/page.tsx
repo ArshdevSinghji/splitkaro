@@ -34,6 +34,7 @@ export default function SignUp() {
     register,
     formState: { errors, isSubmitting },
     handleSubmit,
+    reset,
   } = useForm<ZSignUpSchema>({
     resolver: zodResolver(SignUpSchema),
   });
@@ -50,16 +51,16 @@ export default function SignUp() {
 
   useEffect(() => {
     if (error) {
-      toast.error(`Error signing you in!`);
+      toast.error(`Error signing you up: ${error}`);
     }
   }, [error]);
 
   useEffect(() => {
     if (isRegistered) {
-      toast("user registered successfully!");
+      reset();
       router.push("/");
     }
-  }, [isRegistered]);
+  }, [isRegistered, router, reset]);
 
   return (
     <Paper
@@ -75,7 +76,7 @@ export default function SignUp() {
     >
       <Stack
         component={"form"}
-        onSubmit={handleSubmit(() => onSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
         alignItems={"center"}
         gap={2}
         noValidate
@@ -150,7 +151,7 @@ export default function SignUp() {
         </Button>
 
         <Typography variant="subtitle2">
-          Don't have an account? <Link href={"/"}>SignIn</Link>
+          Already have an account? <Link href={"/"}>SignIn</Link>
         </Typography>
       </Stack>
     </Paper>

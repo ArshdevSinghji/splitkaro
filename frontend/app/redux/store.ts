@@ -4,6 +4,10 @@ import userAuthenticationReducer from "./slice/authenticatingUser.slice";
 import createGroupReducer from "./slice/createGroup";
 import fetchGroupsReducers from "./slice/fetchGroups";
 import fecthUserByUsernameReducer from "./slice/GetUserByUsername.slice";
+import createExpenseWithSettlementsReducers from "./slice/createExpenseWithSettlements";
+import getGroupsDetailsWithExpenseReducers from "./slice/getGroupsDetailsWithExpense";
+import getUserSettlementsReducer from "./slice/getUserSummarySlice";
+import crudForGroupReducer from "./slice/crudForGroup.slice";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -11,7 +15,16 @@ const persistConfig = {
   key: "root",
   storage,
   whitelist: ["authentication"],
-  blacklist: ["register", "creatingGroup", "fetchGroups"],
+  blacklist: [
+    "register",
+    "creatingGroup",
+    "fetchGroups",
+    "fetchingUser",
+    "createExpenseWithSettlements",
+    "getUserSettlements",
+    "getGroupsDetailsWithExpense",
+    "crudForGroup",
+  ],
 };
 
 const rootReducer = combineReducers({
@@ -20,6 +33,10 @@ const rootReducer = combineReducers({
   creatingGroup: createGroupReducer,
   fecthGroups: fetchGroupsReducers,
   fetchingUser: fecthUserByUsernameReducer,
+  createExpenseWithSettlements: createExpenseWithSettlementsReducers,
+  getUserSettlements: getUserSettlementsReducer,
+  getGroupsDetailsWithExpense: getGroupsDetailsWithExpenseReducers,
+  crudForGroup: crudForGroupReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

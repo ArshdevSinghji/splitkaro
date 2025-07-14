@@ -46,9 +46,8 @@ export type ZCreateFriendSchema = z.infer<typeof CreateFriendSchema>;
 export const AddExpenseSchema = z.object({
   description: z.string().nonempty("description is required!"),
   category: z.string().nonempty("category is required!"),
-  price: z.string().nonempty("price is required!"),
-  // .positive("price must be a positive number!")
-  // .min(1, "price must be at least ₹1"),
+  totalAmount: z.string().nonempty("total amount is required!"),
+  paidBy: z.string().nonempty("paid by is required!"),
 });
 
 export type ZAddExpenseSchema = z.infer<typeof AddExpenseSchema>;

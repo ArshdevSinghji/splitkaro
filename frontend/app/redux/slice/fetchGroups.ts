@@ -1,11 +1,10 @@
 import { AxiosInstance } from "@/app/utils/axiosInstance";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { set } from "zod";
 
 export const fetchGroups = createAsyncThunk(
   "fetchGroups",
   async (email: string) => {
-    const res = await AxiosInstance.get(`/group/${email}`);
+    const res = await AxiosInstance.get(`/group/user/${email}`);
     return res.data;
   }
 );

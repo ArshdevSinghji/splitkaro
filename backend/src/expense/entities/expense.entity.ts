@@ -1,8 +1,6 @@
 import { Category } from 'src/enum/category.enum';
-import { GroupDetail } from 'src/group-detail/entity/groupDetail.entity';
 import { Group } from 'src/group/entities/group.entity';
 import { Settlement } from 'src/settlement/entity/settlement.entity';
-import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,

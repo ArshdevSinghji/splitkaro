@@ -11,7 +11,6 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { queryObjects } from 'v8';
 
 @Controller('user')
 export class UserController {
@@ -27,7 +26,7 @@ export class UserController {
     return await this.userService.findByUsernameOrFindAll(query.username);
   }
 
-  @Get(':email')
+  @Get('/find/:email')
   async findOne(@Param('email') email: string) {
     return await this.userService.findOne(email);
   }

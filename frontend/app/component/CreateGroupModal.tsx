@@ -4,6 +4,7 @@ import {
   Button,
   CircularProgress,
   Container,
+  Modal,
   Paper,
   Stack,
   TextField,
@@ -17,11 +18,18 @@ import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
 import { createGroup } from "../redux/slice/createGroup";
 import { toast } from "sonner";
 
-const CreateGroupModal: React.FC<{ handleClose: () => void }> = ({
-  handleClose,
+interface CreateGroupModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
+  open,
+  onClose,
 }) => {
   const { isLoading } = useAppSelector((state) => state.creatingGroup);
   const { user } = useAppSelector((state) => state.authentication);
+
   const dispatch = useAppDispatch();
 
   const {
@@ -41,24 +49,34 @@ const CreateGroupModal: React.FC<{ handleClose: () => void }> = ({
     dispatch(createGroup(data));
     toast.success("Group created successfully!");
     reset();
+    onClose(); // Close modal on success
   };
 
   const handleCancelClick = () => {
     reset();
-    handleClose();
+    onClose();
     toast.error("Group creation cancelled!");
   };
 
   return (
-    <Container>
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Paper
         variant="outlined"
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
           padding: 4,
+          maxWidth: 400,
+          width: '100%',
+          m: 2,
         }}
       >
         <Typography variant="subtitle1">Create a group</Typography>
@@ -103,7 +121,7 @@ const CreateGroupModal: React.FC<{ handleClose: () => void }> = ({
           </Button>
         </Stack>
       </Paper>
-    </Container>
+    </Modal>
   );
 };
 

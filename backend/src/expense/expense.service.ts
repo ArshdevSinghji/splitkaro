@@ -6,6 +6,7 @@ import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UserService } from 'src/user/user.service';
 import { GroupService } from 'src/group/group.service';
 import { SettlementService } from 'src/settlement/settlement.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class ExpenseService {
@@ -15,13 +16,14 @@ export class ExpenseService {
     private readonly groupService: GroupService,
     private readonly userService: UserService,
     private readonly settlementService: SettlementService,
+    // private readonly mailerService: MailerService,
   ) {}
 
   async findOne(expenseId: number) {
     return await this.expenseRepository.findOne({ where: { id: expenseId } });
   }
 
-  async creatingExpenseWWithSettlement(
+  async creatingExpenseWithSettlementWithMail(
     groupName: string,
     createExpenseDto: CreateExpenseDto,
   ) {
@@ -37,17 +39,33 @@ export class ExpenseService {
 
     const savedExpense = await this.expenseRepository.save(expense);
 
-    createExpenseDto.members.map(async (member) => {
-      const user = await this.userService.findOne(member);
-      if (!user) {
-        throw new BadRequestException(`User with email ${member} not found`);
-      }
-      await this.settlementService.create(user, savedExpense, {
-        member,
-        amountToPay: 50,
-        isPaid: createExpenseDto.paidBy === member,
-      });
-    });
+    await Promise.all(
+      createExpenseDto.members.map(async (member) => {
+        const user = await this.userService.findOne(member);
+        if (!user) {
+          throw new BadRequestException(`User with email ${member} not found`);
+        }
+
+        // this.mailerService.sendMail({
+        //   to: user.email,
+        //   subject: 'New Expense Created',
+        //   template: 'expense-created',
+        //   context: {
+        //     groupName: groupName,
+        //     description: createExpenseDto.description,
+        //     totalAmount: createExpenseDto.totalAmount,
+        //     amountToPay: createExpenseDto.amountToPay?.[member] || 0,
+        //     paidBy: createExpenseDto.paidBy,
+        //   },
+        // });
+
+        await this.settlementService.create(user, savedExpense, {
+          member,
+          amountToPay: createExpenseDto?.amountToPay?.[member] || 0,
+          isPaid: createExpenseDto.paidBy === member,
+        });
+      }),
+    );
 
     return savedExpense;
   }

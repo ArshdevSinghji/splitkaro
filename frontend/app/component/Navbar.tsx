@@ -20,7 +20,7 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ p: 1, display: "flex" }}>
+    <AppBar position="sticky" sx={{ p: 1, display: "flex" }}>
       <Toolbar variant="dense">
         <Box flexGrow={1}>
           <Typography variant="h6" color="inherit" component="div">

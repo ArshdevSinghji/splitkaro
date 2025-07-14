@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { GroupService } from './group.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 
@@ -14,13 +22,33 @@ export class GroupController {
     return await this.groupService.create(email, createGroupDto);
   }
 
-  @Get(':email')
+  @Get('user/:email')
   async findAll(@Param('email') email: string) {
     return await this.groupService.findAll(email);
   }
 
-  @Get(':groupName')
+  @Get('name/:groupName')
   async findOne(@Param('groupName') groupName: string) {
     return await this.groupService.findOne(groupName);
+  }
+
+  @Post('addMember')
+  async addFriend(
+    @Query('groupName') groupName: string,
+    @Body() body: { email: string; members: string[] },
+  ) {
+    return await this.groupService.addFriend(
+      groupName,
+      body.email,
+      body.members,
+    );
+  }
+
+  @Delete('deleteMember')
+  async deleteMember(
+    @Query('groupName') groupName: string,
+    @Body() email: string,
+  ) {
+    return await this.groupService.deleteMember(groupName, email);
   }
 }

@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Container,
+  Divider,
   Drawer,
   List,
   ListItem,
@@ -16,10 +17,12 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import GroupsIcon from "@mui/icons-material/Groups";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import CreateGroupModal from "../component/CreateGroupModal";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchGroups } from "../redux/slice/fetchGroups";
+import GroupDetail from "../component/GroupDetail";
+import { GetGroupsDetailsWithExpense } from "../redux/slice/getGroupsDetailsWithExpense";
+import CreateGroupModal from "../component/CreateGroupModal";
 import AddExpenseModal from "../component/AddExpenseModal";
 
 const Home = () => {
@@ -32,7 +35,8 @@ const Home = () => {
   }, [dispatch, user.email]);
 
   const [showCreateGroup, setShowCreateGroup] = useState(false);
-  const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
+
+  const [groupName, setGroupName] = useState("");
 
   const handleCreateGroupClick = () => {
     setShowCreateGroup(true);
@@ -79,52 +83,42 @@ const Home = () => {
 
           <List>
             {groups.map((group, index) => (
-              <ListItem key={index} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <GroupsIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={group.groupName} />
-                  <ListItemIcon>
-                    <AddCircleIcon
-                      onClick={() =>
-                        setShowAddExpenseModal(!showAddExpenseModal)
-                      }
+              <React.Fragment key={index}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <GroupsIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={group.groupName}
+                      onClick={() => {
+                        setGroupName(group.groupName);
+                        dispatch(GetGroupsDetailsWithExpense(group.groupName));
+                      }}
                     />
-                  </ListItemIcon>
-                </ListItemButton>
-              </ListItem>
+                  </ListItemButton>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
             ))}
           </List>
         </Stack>
       </Drawer>
-
-      <Container
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          ml: 0,
-          minHeight: "100vh",
-          backgroundColor: "white",
-        }}
-      >
-        {!showCreateGroup && !showAddExpenseModal ? (
-          <Box>
-            <Typography variant="h4" gutterBottom>
-              These are your groups.
-            </Typography>
-          </Box>
+      <Container>
+        {groupName === "" ? (
+          <Typography>Select a group to view details</Typography>
         ) : (
           <Box>
-            {showAddExpenseModal ? (
-              <AddExpenseModal />
-            ) : (
-              <CreateGroupModal handleClose={handleCloseCreateGroup} />
-            )}
+            <GroupDetail />
           </Box>
         )}
       </Container>
+
+      {/* Modals */}
+      <CreateGroupModal
+        open={showCreateGroup}
+        onClose={handleCloseCreateGroup}
+      />
     </Box>
   );
 };

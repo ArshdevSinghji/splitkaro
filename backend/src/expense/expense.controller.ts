@@ -12,7 +12,7 @@ export class ExpenseController {
     @Body() createExpenseDto: CreateExpenseDto,
   ) {
     const { groupName } = query;
-    return await this.expenseService.creatingExpenseWWithSettlement(
+    return await this.expenseService.creatingExpenseWithSettlementWithMail(
       groupName,
       createExpenseDto,
     );

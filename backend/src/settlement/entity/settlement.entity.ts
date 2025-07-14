@@ -1,6 +1,14 @@
 import { Expense } from 'src/expense/entities/expense.entity';
+import { Notification } from 'src/notification/entity/notification.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Settlement {
@@ -21,4 +29,8 @@ export class Settlement {
 
   @ManyToOne(() => User, (user) => user.settlements)
   user: User;
+
+  @OneToOne(() => Notification, (notification) => notification.settlement)
+  @JoinColumn()
+  notification: Notification;
 }

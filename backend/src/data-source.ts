@@ -2,9 +2,9 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { config } from 'dotenv';
 import { User } from './user/entities/user.entity';
 import { Group } from './group/entities/group.entity';
-import { GroupDetail } from './group-detail/entity/groupDetail.entity';
 import { Expense } from './expense/entities/expense.entity';
 import { Settlement } from './settlement/entity/settlement.entity';
+import { Notification } from './notification/entity/notification.entity';
 
 config();
 
@@ -15,7 +15,7 @@ export const dataSourceOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [User, Group, GroupDetail, Expense, Settlement],
+  entities: [User, Group, Expense, Settlement, Notification],
   synchronize: true,
   logging: false,
 } as DataSourceOptions;

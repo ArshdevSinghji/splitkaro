@@ -40,7 +40,12 @@ export class UserService {
   async findOne(email: string) {
     return await this.userRepository.findOne({
       where: { email },
-      relations: ['groups', 'groups.groupDetail'],
+      relations: [
+        'groups',
+        'settlements',
+        'settlements.expense',
+        'settlements.expense.group',
+      ],
     });
   }
 

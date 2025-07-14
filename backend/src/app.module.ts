@@ -5,7 +5,6 @@ import { dataSourceOptions } from './data-source';
 import { HashModule } from './hash/hash.module';
 import { AuthModule } from './auth/auth.module';
 import { GroupModule } from './group/group.module';
-import { GroupDetailModule } from './group-detail/group-detail.module';
 import { ExpenseModule } from './expense/expense.module';
 
 @Module({
@@ -15,7 +14,6 @@ import { ExpenseModule } from './expense/expense.module';
     HashModule,
     AuthModule,
     GroupModule,
-    GroupDetailModule,
     ExpenseModule,
   ],
 })
