@@ -22,7 +22,7 @@ export class ExpenseService {
   async findOne(expenseId: number) {
     return await this.expenseRepository.findOne({
       where: { id: expenseId },
-      relations: ['settlements'], // Load settlements for cascade deletion
+      relations: ['settlements'],
     });
   }
 

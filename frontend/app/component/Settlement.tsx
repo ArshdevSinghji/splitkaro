@@ -35,10 +35,8 @@ const SettlementComponent = () => {
     setSelectedCategory(category);
 
     if (category === Category.ALL) {
-      // Fetch all settlements
       dispatch(GetUserSettlements(user.email));
     } else {
-      // Fetch filtered settlements
       dispatch(
         GetUserSettlementsByCategory({
           email: user.email,
@@ -73,11 +71,6 @@ const SettlementComponent = () => {
       </Container>
     );
   }
-
-  // Remove this early return - let the component render normally
-  // if (settlements.length === 0) {
-  //   return <Typography>No settlements found.</Typography>;
-  // }
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
