@@ -21,6 +21,7 @@ const Profile = () => {
 
   const handleLogOut = () => {
     dispatch(logout());
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     toast.success("Logged out successfully!");
     router.push("/");
   };
