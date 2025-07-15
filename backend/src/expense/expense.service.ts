@@ -16,7 +16,7 @@ export class ExpenseService {
     private readonly groupService: GroupService,
     private readonly userService: UserService,
     private readonly settlementService: SettlementService,
-    // private readonly mailerService: MailerService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async findOne(expenseId: number) {
@@ -46,18 +46,19 @@ export class ExpenseService {
           throw new BadRequestException(`User with email ${member} not found`);
         }
 
-        // this.mailerService.sendMail({
-        //   to: user.email,
-        //   subject: 'New Expense Created',
-        //   template: 'expense-created',
-        //   context: {
-        //     groupName: groupName,
-        //     description: createExpenseDto.description,
-        //     totalAmount: createExpenseDto.totalAmount,
-        //     amountToPay: createExpenseDto.amountToPay?.[member] || 0,
-        //     paidBy: createExpenseDto.paidBy,
-        //   },
-        // });
+        this.mailerService.sendMail({
+          to: user.email,
+          from: 'noreply@splitkaro.com',
+          subject: 'New Expense Created',
+          template: 'expense-created',
+          context: {
+            groupName: groupName,
+            description: createExpenseDto.description,
+            totalAmount: createExpenseDto.totalAmount,
+            amountToPay: createExpenseDto.amountToPay?.[member] || 0,
+            paidBy: createExpenseDto.paidBy,
+          },
+        });
 
         await this.settlementService.create(user, savedExpense, {
           member,

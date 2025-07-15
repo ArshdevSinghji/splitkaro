@@ -16,21 +16,13 @@ import { join } from 'path';
     MailerModule.forRootAsync({
       useFactory: async () => ({
         transport: {
-          host: process.env.EMAIL_HOST || 'localhost',
-          port: parseInt(process.env.EMAIL_PORT || '1025'),
+          host: 'mailhog',
+          port: 1025,
           secure: false,
-          ignoreTLS: true,
         },
-        defaults: {
-          from: '"SplitKaro App" <noreply@splitkaro.com>',
-        },
-        preview: true,
         template: {
           dir: join(process.cwd(), 'src', 'templates'),
           adapter: new HandlebarsAdapter(),
-          options: {
-            strict: true,
-          },
         },
       }),
     }),
