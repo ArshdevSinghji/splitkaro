@@ -10,9 +10,9 @@ services:
     environment:
       POSTGRES_USER: dockerPostgres
       POSTGRES_PASSWORD: arsh
-      POSTGRES_DB: splikaro
+      POSTGRES_DB: splitkaro
     ports:
-      - "5432:5432"
+      - "5430:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
