@@ -56,8 +56,18 @@ const Profile = () => {
             }}
           >
             <SummarizeIcon />
-            <Typography>Summary</Typography>
+            <Typography>Settlements</Typography>
           </Stack>
+
+          <Divider />
+
+          <Button
+            variant="outlined"
+            onClick={() => router.push("/home")}
+            sx={{ my: 2 }}
+          >
+            Back to dashboard
+          </Button>
 
           <Divider />
 
@@ -66,6 +76,7 @@ const Profile = () => {
             variant="contained"
             color="error"
             onClick={handleLogOut}
+            sx={{ m: "auto 0" }}
           >
             Logout
           </Button>

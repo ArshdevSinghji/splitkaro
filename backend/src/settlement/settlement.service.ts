@@ -25,4 +25,16 @@ export class SettlementService {
     });
     return await this.settlementRepository.save(settlement);
   }
+
+  async deleteByExpenseId(expenseId: number) {
+    const settlements = await this.settlementRepository.find({
+      where: { expense: { id: expenseId } },
+    });
+
+    if (settlements.length > 0) {
+      return await this.settlementRepository.remove(settlements);
+    }
+
+    return { affected: 0 };
+  }
 }

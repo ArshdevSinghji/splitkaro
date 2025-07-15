@@ -1,6 +1,5 @@
 import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
 import { Group } from '../../group/entities/group.entity';
-import { Expense } from 'src/expense/entities/expense.entity';
 import { Settlement } from 'src/settlement/entity/settlement.entity';
 
 @Entity()
@@ -15,12 +14,14 @@ export class User {
   @Column()
   password: string;
 
-  //   @Column()
-  //   avatar: string;
+  @Column({ nullable: true })
+  avatar: string;
 
-  @OneToMany(() => Group, (group) => group.owner)
+  @OneToMany(() => Group, (group) => group.owner, { cascade: true })
   groups: Group[];
 
-  @OneToMany(() => Settlement, (settlement) => settlement.user)
+  @OneToMany(() => Settlement, (settlement) => settlement.user, {
+    cascade: true,
+  })
   settlements: Settlement[];
 }

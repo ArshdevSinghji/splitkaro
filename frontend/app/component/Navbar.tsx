@@ -7,6 +7,7 @@ import {
   Box,
   Stack,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -31,7 +32,14 @@ const Navbar = () => {
           <Badge badgeContent={17} color="error">
             <NotificationsIcon />
           </Badge>
-          <Avatar onClick={handleClick} />
+          <Tooltip title="user profile">
+            <Avatar
+              onClick={handleClick}
+              sx={{
+                cursor: "pointer",
+              }}
+            />
+          </Tooltip>
         </Stack>
       </Toolbar>
     </AppBar>

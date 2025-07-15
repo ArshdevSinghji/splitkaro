@@ -29,6 +29,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createExpenseWithSettlements } from "../redux/slice/createExpenseWithSettlements";
 import { toast } from "sonner";
 
+export enum Category {
+  HOME = "home",
+  TRIP = "trip",
+  PERSONAL = "personal",
+  OFFICE = "office",
+  SPORTS = "sports",
+  OTHERS = "others",
+  ALL = "all",
+}
+
 interface AddExpenseModalProps {
   open: boolean;
   onClose: () => void;
@@ -53,15 +63,6 @@ const AddExpenseModal = ({ open, onClose }: AddExpenseModalProps) => {
   } = useForm<ZAddExpenseSchema>({
     resolver: zodResolver(AddExpenseSchema),
   });
-
-  enum Category {
-    HOME = "home",
-    TRIP = "trip",
-    PERSONAL = "personal",
-    OFFICE = "office",
-    SPORTS = "sports",
-    OTHERS = "others",
-  }
 
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [price, setPrice] = useState<number>(0);
@@ -108,8 +109,6 @@ const AddExpenseModal = ({ open, onClose }: AddExpenseModalProps) => {
       members,
       amountToPay,
     };
-
-    // console.log("Expense Data:", expenseData);
 
     dispatch(
       createExpenseWithSettlements({

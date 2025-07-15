@@ -29,9 +29,11 @@ export class Expense {
   @Column()
   paidBy: string;
 
-  @ManyToOne(() => Group, (group) => group.expense)
+  @ManyToOne(() => Group, (group) => group.expense, { cascade: true })
   group: Group;
 
-  @OneToMany(() => Settlement, (settlement) => settlement.expense)
+  @OneToMany(() => Settlement, (settlement) => settlement.expense, {
+    cascade: true,
+  })
   settlements: Settlement[];
 }

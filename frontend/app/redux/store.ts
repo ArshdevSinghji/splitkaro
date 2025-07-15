@@ -7,6 +7,7 @@ import fecthUserByUsernameReducer from "./slice/GetUserByUsername.slice";
 import createExpenseWithSettlementsReducers from "./slice/createExpenseWithSettlements";
 import getGroupsDetailsWithExpenseReducers from "./slice/getGroupsDetailsWithExpense";
 import getUserSettlementsReducer from "./slice/getUserSummarySlice";
+import removeExpenseReducer from "./slice/removeExpense.slice";
 import crudForGroupReducer from "./slice/crudForGroup.slice";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -24,6 +25,7 @@ const persistConfig = {
     "getUserSettlements",
     "getGroupsDetailsWithExpense",
     "crudForGroup",
+    "removeExpense",
   ],
 };
 
@@ -37,6 +39,7 @@ const rootReducer = combineReducers({
   getUserSettlements: getUserSettlementsReducer,
   getGroupsDetailsWithExpense: getGroupsDetailsWithExpenseReducers,
   crudForGroup: crudForGroupReducer,
+  removeExpense: removeExpenseReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

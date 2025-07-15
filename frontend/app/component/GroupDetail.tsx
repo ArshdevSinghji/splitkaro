@@ -20,20 +20,32 @@ import {
 import React, { useState } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import AddExpenseModal from "./AddExpenseModal";
 import { removeMemberFromGroup } from "../redux/slice/crudForGroup.slice";
+import { removeExpenseThunk } from "../redux/slice/removeExpense.slice";
+import { toast } from "sonner";
 
 const GroupDetail = () => {
   const [addExpenseModalOpen, setAddExpenseModalOpen] = useState(false);
 
   const dispatch = useAppDispatch();
 
+  const removeThunk = useAppSelector((state) => state.removeExpense);
   const { group, error, isLoading } = useAppSelector(
     (state) => state.getGroupsDetailsWithExpense
   );
-
   const { user: currentUser } = useAppSelector((state) => state.authentication);
+
+  if (removeThunk.isLoading) {
+    return (
+      <Backdrop open sx={{ color: "#fff", zIndex: 9999 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
 
   if (isLoading)
     return (
@@ -43,8 +55,6 @@ const GroupDetail = () => {
     );
   if (error)
     return <Typography>Error fetching group details: {error}</Typography>;
-
-  console.log(group);
 
   const getAvatarColor = (email: string) => {
     const colors = [
@@ -245,7 +255,7 @@ const GroupDetail = () => {
           <Stack spacing={2}>
             {group.expense.map((expense, index) => (
               <Paper
-                key={expense.id}
+                key={index}
                 sx={{
                   p: 2,
                   border: "1px solid #e0e0e0",
@@ -253,8 +263,41 @@ const GroupDetail = () => {
                     boxShadow: 2,
                     borderColor: "primary.main",
                   },
+                  position: "relative",
                 }}
               >
+                {isCurrentUserAdmin && (
+                  <Tooltip title="Delete Expense">
+                    <IconButton
+                      size="small"
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this expense?"
+                          )
+                        ) {
+                          dispatch(
+                            removeExpenseThunk({
+                              groupName: group.groupName,
+                              expenseId: expense.id,
+                            })
+                          );
+                          toast.success("expense deleted!");
+                        }
+                      }}
+                      sx={{
+                        position: "absolute",
+                        right: 8,
+                        top: 8,
+                        color: "error.main",
+                        backgroundColor: "rgba(211, 47, 47, 0.1)",
+                        zIndex: 1,
+                      }}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
                 <Box
                   sx={{
                     display: "grid",

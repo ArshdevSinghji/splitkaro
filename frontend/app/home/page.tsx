@@ -16,14 +16,13 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import GroupsIcon from "@mui/icons-material/Groups";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchGroups } from "../redux/slice/fetchGroups";
 import GroupDetail from "../component/GroupDetail";
 import { GetGroupsDetailsWithExpense } from "../redux/slice/getGroupsDetailsWithExpense";
 import CreateGroupModal from "../component/CreateGroupModal";
-import AddExpenseModal from "../component/AddExpenseModal";
+import HomePage from "../component/HomePage";
 
 const Home = () => {
   const { user } = useAppSelector((state) => state.authentication);
@@ -104,15 +103,15 @@ const Home = () => {
           </List>
         </Stack>
       </Drawer>
-      <Container>
+      <Box sx={{ p: 3, flexGrow: 2 }}>
         {groupName === "" ? (
-          <Typography>Select a group to view details</Typography>
+          <HomePage />
         ) : (
           <Box>
             <GroupDetail />
           </Box>
         )}
-      </Container>
+      </Box>
 
       {/* Modals */}
       <CreateGroupModal

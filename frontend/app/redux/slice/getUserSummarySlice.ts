@@ -1,5 +1,6 @@
 import { AxiosInstance } from "@/app/utils/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Category } from "@/app/component/AddExpenseModal";
 
 export const GetUserSettlements = createAsyncThunk(
   "user/getSettlements",
@@ -24,6 +25,39 @@ export const GetUserSettlements = createAsyncThunk(
     }));
 
     return cleanedSettlements;
+  }
+);
+
+export const GetUserSettlementsByCategory = createAsyncThunk(
+  "user/getSettlementsByCategory",
+  async (payload: { email: string; category: string }) => {
+    const response = await AxiosInstance(`/user/find/${payload.email}`);
+    const data = response.data;
+
+    const cleanedSettlements = data.settlements.map((settlement: any) => ({
+      id: settlement.id,
+      amountToPay: settlement.amountToPay,
+      isPaid: settlement.isPaid,
+      expense: {
+        id: settlement.expense.id,
+        members: settlement.expense.members,
+        description: settlement.expense.description,
+        category: settlement.expense.category,
+        totalAmount: settlement.expense.totalAmount,
+        paidBy: settlement.expense.paidBy,
+        group: {
+          groupName: settlement.expense.group.groupName,
+        },
+      },
+    }));
+
+    if (payload.category === "ALL" || payload.category === Category.ALL) {
+      return cleanedSettlements;
+    }
+
+    return cleanedSettlements.filter(
+      (settlement: any) => settlement.expense.category === payload.category
+    );
   }
 );
 
@@ -76,6 +110,19 @@ const getUserSummarySlice = createSlice({
     builder.addCase(GetUserSettlements.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message || "Failed to fetch settlements";
+    });
+    builder.addCase(GetUserSettlementsByCategory.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(GetUserSettlementsByCategory.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.settlements = action.payload;
+    });
+    builder.addCase(GetUserSettlementsByCategory.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error =
+        action.error.message || "Failed to fetch settlements by category";
     });
   },
 });

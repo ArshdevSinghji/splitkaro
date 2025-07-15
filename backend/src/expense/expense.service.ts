@@ -20,7 +20,10 @@ export class ExpenseService {
   ) {}
 
   async findOne(expenseId: number) {
-    return await this.expenseRepository.findOne({ where: { id: expenseId } });
+    return await this.expenseRepository.findOne({
+      where: { id: expenseId },
+      relations: ['settlements'], // Load settlements for cascade deletion
+    });
   }
 
   async creatingExpenseWithSettlementWithMail(
@@ -50,7 +53,7 @@ export class ExpenseService {
           to: user.email,
           from: 'noreply@splitkaro.com',
           subject: 'New Expense Created',
-          template: 'expense-created',
+          template: 'notification',
           context: {
             groupName: groupName,
             description: createExpenseDto.description,
@@ -69,5 +72,53 @@ export class ExpenseService {
     );
 
     return savedExpense;
+  }
+
+  async deleteExpenseWithSettlementWithMail(
+    groupName: string,
+    expenseId: number,
+  ) {
+    const group = await this.groupService.findOne(groupName);
+    if (!group) {
+      throw new BadRequestException(`Group with name ${groupName} not found`);
+    }
+
+    const expense = await this.findOne(Number(expenseId));
+    if (!expense) {
+      throw new BadRequestException(`Expense with ID ${expenseId} not found`);
+    }
+
+    const members = expense.members;
+    const expenseData = {
+      description: expense.description,
+      totalAmount: expense.totalAmount,
+      paidBy: expense.paidBy,
+    };
+
+    await this.settlementService.deleteByExpenseId(expenseId);
+
+    await this.expenseRepository.remove(expense);
+
+    await Promise.all(
+      members.map(async (member) => {
+        const user = await this.userService.findOne(member);
+        if (user) {
+          this.mailerService.sendMail({
+            to: user.email,
+            from: 'noreply@splitkaro.com',
+            subject: 'Expense Deleted',
+            template: 'notification',
+            context: {
+              groupName: groupName,
+              description: expenseData.description,
+              totalAmount: expenseData.totalAmount,
+              paidBy: expenseData.paidBy,
+              action: 'deleted',
+            },
+          });
+        }
+      }),
+    );
+    return { message: 'Expense deleted successfully' };
   }
 }
