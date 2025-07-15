@@ -11,6 +11,7 @@ import { logout } from "../redux/slice/authenticatingUser.slice";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { GetUserSettlements } from "../redux/slice/getUserSummarySlice";
+import { toast } from "sonner";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -20,6 +21,7 @@ const Profile = () => {
 
   const handleLogOut = () => {
     dispatch(logout());
+    toast.success("Logged out successfully!");
     router.push("/");
   };
 
